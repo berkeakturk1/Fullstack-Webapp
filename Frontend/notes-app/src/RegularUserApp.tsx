@@ -53,7 +53,7 @@ const RegularUserApp = () => {
     const fetchTaskboardId = async () => {
       try {
         const token = localStorage.getItem('token');
-        const response = await fetch(`/api/user_taskboard_id`, {
+        const response = await fetch(`http://localhost:3001/api/user_taskboard_id`, {
           headers: {
             'Authorization': `Bearer ${token}`
           }
@@ -98,7 +98,7 @@ const RegularUserApp = () => {
           return;
         }
 
-        const response = await fetch(`/api/tasks?taskboardId=${boardId}`, {
+        const response = await fetch(`http://localhost:3001/api/tasks?taskboardId=${boardId}`, {
           headers: {
             'Authorization': `Bearer ${token}`
           }

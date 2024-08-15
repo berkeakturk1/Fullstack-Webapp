@@ -9,14 +9,14 @@ const users = [];
 
 const app = express();
 const port = 3001;
-
 const client = new Client({
-  host: "localhost",
+  host: "postgres",  // Use the service name defined in docker-compose.yml
   user: "postgres",
   port: 5432,
-  password: "1",
-  database: "postgres",
+  password: "postgres",
+  database: "postgres1",
 });
+
 
 client.connect();
 

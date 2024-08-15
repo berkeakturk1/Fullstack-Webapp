@@ -22,7 +22,7 @@ const UserPopup: React.FC<UserPopupProps> = ({ open, onClose, taskboardId }) => 
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const response = await fetch('/api/users');
+        const response = await fetch('http://localhost:3001/api/users');
         const data = await response.json();
         console.log('Fetched users:', data); // Debug: Log fetched users
         setUsers(data);
@@ -48,7 +48,7 @@ const UserPopup: React.FC<UserPopupProps> = ({ open, onClose, taskboardId }) => 
 
   const handleAddUser = async (userId: number) => {
     try {
-      const response = await fetch(`/api/user_taskboards`, {
+      const response = await fetch(`http://localhost:3001/api/user_taskboards`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

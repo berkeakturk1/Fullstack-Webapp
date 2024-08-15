@@ -49,7 +49,7 @@ const WorkspacePage: React.FC = () => {
   
       try {
         // Fetch guest taskboards
-        const guestTaskboardsResponse = await fetch(`/api/taskboards?userId=${userId}`, {
+        const guestTaskboardsResponse = await fetch(`http://localhost:3001/api/taskboards?userId=${userId}`, {
           headers: {
             'Authorization': `Bearer ${token}`,  // Pass the token in the header
           }
@@ -60,7 +60,7 @@ const WorkspacePage: React.FC = () => {
         const guestTaskboards = await guestTaskboardsResponse.json();
   
         // Fetch host taskboards (workspaces)
-        const hostTaskboardsResponse = await fetch(`/api/workspaces?userId=${userId}&userType=${userType}`, {
+        const hostTaskboardsResponse = await fetch(`http://localhost:3001/api/workspaces?userId=${userId}&userType=${userType}`, {
           headers: {
             'Authorization': `Bearer ${token}`,  // Pass the token in the header
           }
@@ -74,7 +74,7 @@ const WorkspacePage: React.FC = () => {
   
         // Process guest taskboards
         for (const taskboard of guestTaskboards) {
-          const tasksResponse = await fetch(`/api/tasks?taskboardId=${taskboard.id}`, {
+          const tasksResponse = await fetch(`http://localhost:3001/api/tasks?taskboardId=${taskboard.id}`, {
             headers: {
               'Authorization': `Bearer ${token}`,  // Pass the token in the header
             }
@@ -108,7 +108,7 @@ const WorkspacePage: React.FC = () => {
   
         // Process host taskboards
         for (const taskboard of hostTaskboards) {
-          const tasksResponse = await fetch(`/api/tasks?taskboardId=${taskboard.taskboard_id}`, {
+          const tasksResponse = await fetch(`http://localhost:3001/api/tasks?taskboardId=${taskboard.taskboard_id}`, {
             headers: {
               'Authorization': `Bearer ${token}`,  // Pass the token in the header
             }

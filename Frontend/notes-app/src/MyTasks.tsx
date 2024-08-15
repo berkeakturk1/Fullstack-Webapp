@@ -67,7 +67,7 @@ const MyTasks: React.FC = () => {
             }
 
             try {
-                const response = await fetch('/api/user-tasks', {
+                const response = await fetch('http://localhost:3001/api/user-tasks', {
                     headers: {
                         'Authorization': `Bearer ${token}`
                     }
@@ -101,7 +101,7 @@ const MyTasks: React.FC = () => {
 
     const handleFlagForReview = async (taskId: number) => {
         try {
-            const response = await fetch(`/api/flag-task/${taskId}`, {
+            const response = await fetch(`http://localhost:3001/api/flag-task/${taskId}`, {
                 method: "PUT",
                 headers: {
                     "Content-Type": "application/json",

@@ -45,7 +45,7 @@ const WorkspaceCard: React.FC<WorkspaceCardProps> = ({
 
   const handleSearch = async () => {
     try {
-      const response = await fetch(`/api/users?query=${searchQuery}`);
+      const response = await fetch(`http://localhost:3001/api/users?query=${searchQuery}`);
       const results = await response.json();
       setSearchResults(results);
     } catch (error) {

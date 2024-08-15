@@ -51,7 +51,7 @@ const App = () => {
   useEffect(() => {
     const fetchWorkforce = async () => {
       try {
-        const response = await fetch(`/api/workforce?taskboard_id=${taskboardId}`);
+        const response = await fetch(`http://localhost:3001/api/workforce?taskboard_id=${taskboardId}`);
         const data: WorkforceMember[] = await response.json();
         console.log('Fetched workforce:', data); // Debug: Log fetched workforce
         setWorkforce(data); // Update the workforce state with fetched data
@@ -78,7 +78,7 @@ const App = () => {
                     return;
                 }
 
-                const response = await fetch(`/api/tasks?taskboardId=${taskboardId}`, {
+                const response = await fetch(`http://localhost:3001/api/tasks?taskboardId=${taskboardId}`, {
                     headers: {
                         'Authorization': `Bearer ${token}`  // Add Bearer prefix
                     }
