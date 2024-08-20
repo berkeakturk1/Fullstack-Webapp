@@ -1,5 +1,5 @@
 // services/TaskService.js
-const { Task, Taskboard } = require('../models');
+const { Task, Taskboard, UserTask } = require('../models');
 
 class TaskService {
   async createTask(data) {
@@ -11,8 +11,6 @@ class TaskService {
     if (!task) throw new Error('Task not found');
     return task.update(data);
   }
-
-  
 
   async deleteTask(id) {
     const task = await Task.findByPk(id);
@@ -31,14 +29,32 @@ class TaskService {
   }
 
   async getUserTasks(userId) {
-    return Task.findAll({
-      include: [{
-        model: Taskboard,
-        where: { user_id: userId },  // Assuming Taskboard has a user_id field
-        attributes: ['title'] // Fetch the taskboard title along with the task
-      }],
-      attributes: ['id', 'task_title', 'status', 'dueDate', 'dueTime'],
+    console.log('Fetching tasks for userId:', userId);
+    const tasks = await Task.findAll({
+      include: [
+        {
+          model: UserTask,
+          where: { user_id: userId },
+          attributes: [], // No need to return any fields from UserTask
+        },
+        {
+          model: Taskboard,
+          attributes: ['title'], // Include taskboard title
+        },
+      ],
+      attributes: ['m_id', 'task_title', 'status', 'due_date', 'due_time'],
     });
+
+    return tasks.map(task => ({
+      id: task.m_id,
+      task_title: task.task_title,
+      taskboard: task.Taskboard.title, // Use the taskboard title from the association
+      status: task.status === "todo" ? "To Do" : task.status === "inProgress" ? "In Progress" : task.status === "codeReview" ? "Code Review" : "Done",
+      dueDate: task.due_date,  // Include due_date in response
+      dueTime: task.due_time,  // Include due_time in response
+      isLate: task.due_date && task.due_date < new Date(),  // Check if the task is late
+      flaggedForReview: task.status === 'codeReview', // Assuming flagging is based on status
+    }));
   }
 }
 

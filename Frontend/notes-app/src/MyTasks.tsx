@@ -13,12 +13,12 @@ import {
     IconButton,
 } from "@mui/material";
 import { styled } from "@mui/system";
-import { Flag as FlagIcon, FlagOutlined as FlagOutlinedIcon } from "@mui/icons-material";
 import { CircularProgressbar, buildStyles } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
 import "./MyTasks.css";
 import { tableCellClasses } from "@mui/material/TableCell";
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import TaskAltIcon from '@mui/icons-material/TaskAlt';
 
 interface Task {
     id: number;
@@ -65,25 +65,27 @@ const MyTasks: React.FC = () => {
                 console.error("User is not logged in.");
                 return;
             }
-
+        
             try {
                 const response = await fetch('http://localhost:3001/api/user-tasks', {
                     headers: {
                         'Authorization': `Bearer ${token}`
                     }
                 });
-
+        
                 if (!response.ok) {
                     throw new Error(`Failed to fetch tasks: ${response.statusText}`);
                 }
-
+        
                 const data = await response.json();
+        
                 setTasks(data);
-
+        
                 // Calculate completed tasks
                 const completed = data.filter((task: Task) => task.status === "Done" || task.status === "Complete").length;
+        
                 setCompletedTasks(completed);
-
+        
             } catch (error) {
                 console.error("Error fetching tasks:", error);
             }
@@ -100,6 +102,12 @@ const MyTasks: React.FC = () => {
     }, []);
 
     const handleFlagForReview = async (taskId: number) => {
+        console.log("Flagging task with ID:", taskId); // Debugging line
+        if (!taskId) {
+            console.error("Invalid taskId:", taskId);
+            return;
+        }
+    
         try {
             const response = await fetch(`http://localhost:3001/api/flag-task/${taskId}`, {
                 method: "PUT",
@@ -109,15 +117,14 @@ const MyTasks: React.FC = () => {
                 },
                 body: JSON.stringify({ status: "codeReview" }), // Send the new status to the backend
             });
-
+    
             if (!response.ok) {
                 throw new Error("Failed to flag task for review");
             }
-
+    
             // Update task in state
             setTasks(prevTasks =>
                 prevTasks.map(task => {
-                    console.log(`Task ID: ${task.id}, Status: ${task.status}`);  // Debugging line
                     return task.id === taskId ? { ...task, status: "codeReview", flaggedForReview: true } : task;
                 })
             );
@@ -138,7 +145,7 @@ const MyTasks: React.FC = () => {
 
     const totalTasks = tasks.length;
     const percentage = totalTasks > 0 ? (completedTasks / totalTasks) * 100 : 0;
-
+    
     return (
         <Paper elevation={3} sx={{ padding: 2, maxWidth: '100%' }}>
             <Typography variant="h6" sx={{ marginBottom: 2, fontWeight: 'bold'}}>
@@ -167,24 +174,21 @@ const MyTasks: React.FC = () => {
                                         <StyledTableCell align="center">{task.status}</StyledTableCell>
                                         <StyledTableCell align="center" sx={{ color: task.isLate ? 'red' : 'inherit', fontWeight: task.isLate ? 'bold' : 'normal' }}>
                                             {formatDateTime(task.dueDate, task.dueTime)}
-
                                         </StyledTableCell>
                                         <StyledTableCell align="center">
-                                            <Tooltip title={task.status === "done" ? "Task Completed" : "Flag for Review"}>
+                                        <Tooltip title={task.status === "Code Review" ? "Pending Review" : task.status === "Done" ? "Task Surpassed Review" : "Complete Task"}>
                                                 <span>
                                                     <IconButton
-                                                        onClick={task.status !== "done" ? () => handleFlagForReview(task.id) : undefined}
-                                                        disabled={task.status === "done"} // Disable the button if the task is done
-                                                        sx={{ color: task.status === "done" ? '#4caf50' : 'inherit' }}
+                                                        onClick={task.status === "In Progress" ? () => handleFlagForReview(task.id) : undefined}
+                                                        disabled={task.status !== "In Progress"} // Only enable if status is "In Progress"
+                                                        sx={{ color: task.status === "Code Review" ? '#4caf50' : 'inherit' }}
                                                     >
-                                                        {task.status === "done" ? (
-                                                            <CheckCircleIcon sx={{ color: '#4caf50' }} />
+                                                        {task.status === "Done" ? (
+                                                            <CheckCircleIcon sx={{ color: '#4caf50' }} />  // Green check icon for "Done"
+                                                        ) : task.status === "Code Review" ? (
+                                                            <CheckCircleIcon sx={{ color: '#FFBF00' }} />  // Yellow task icon for "Code Review"
                                                         ) : (
-                                                            task.status === "codeReview" || task.flaggedForReview ? (
-                                                                <FlagIcon sx={{ color: '#4caf50' }} />
-                                                            ) : (
-                                                                <FlagOutlinedIcon sx={{ color: '#4caf50' }} />
-                                                            )
+                                                            <TaskAltIcon sx={{ color: '#4caf50' }} />  // Green task icon for "In Progress"
                                                         )}
                                                     </IconButton>
                                                 </span>

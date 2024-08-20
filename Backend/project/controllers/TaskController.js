@@ -30,7 +30,10 @@ class TaskController {
 
   async getUserTasks(req, res) {
     try {
-      const userId = req.user.id; // Assuming the user ID is extracted from the token in a middleware
+      const userId = req.user.id || req.user.userId; // Adjust based on the payload structure
+      if (!userId) {
+        throw new Error('User ID is missing from token');
+      }
       const tasks = await TaskService.getUserTasks(userId);
       res.json(tasks);
     } catch (error) {

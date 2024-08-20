@@ -17,7 +17,7 @@ class TaskboardController {
         }]
       });
 
-      console.log('Fetched GUEST taskboards:', taskboards);
+      //console.log('Fetched GUEST taskboards:', taskboards);
 
       res.json(taskboards);
     } catch (error) {

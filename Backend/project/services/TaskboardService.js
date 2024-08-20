@@ -8,7 +8,6 @@ class TaskboardService {
 
   // Fetch taskboards for a user based on their association in the UserTaskboard model
   async getTaskboardsByUserId(userId) {
-    console.log('Fetching taskboards for userId:', userId);
     const taskboards = await Taskboard.findAll({
       include: [{
         model: UserTaskboard,
@@ -16,15 +15,14 @@ class TaskboardService {
         attributes: ['user_id', 'taskboard_id', 'role']
       }]
     });
-    console.log('Fetched taskboards:', taskboards);
     return taskboards;
   }
 
   // Fetch a taskboard by its ID
   async getTaskboardById(id) {
-    console.log('Fetching taskboard with id:', id);
+   // console.log('Fetching taskboard with id:', id);
     const taskboard = await Taskboard.findByPk(id);
-    console.log('Fetched taskboard:', taskboard);
+    //console.log('Fetched taskboard:', taskboard);
     return taskboard;
   }
 
@@ -34,7 +32,7 @@ class TaskboardService {
 
   // Fetch tasks for a specific taskboard
   async getTasksForTaskboard(taskboardId) {
-    console.log('Fetching tasks for taskboardId:', taskboardId);
+    //console.log('Fetching tasks for taskboardId:', taskboardId);
     if (!taskboardId) {
       console.error('No taskboardId provided for fetching tasks');
       return [];
@@ -48,12 +46,12 @@ class TaskboardService {
 
   // Fetch taskboards belonging to a specific workspace
   async getTaskboardsByWorkspaceId(workspaceId) {
-    console.log('Fetching taskboards for workspaceId:', workspaceId);
+    //console.log('Fetching taskboards for workspaceId:', workspaceId);
     const taskboards = await Taskboard.findAll({
       where: { workspace_id: workspaceId },
       include: [Workspace]
     });
-    console.log('Fetched taskboards for workspace:', taskboards);
+    //console.log('Fetched taskboards for workspace:', taskboards);
     return taskboards;
   }
 
@@ -66,9 +64,9 @@ class TaskboardService {
         where: { user_id: userId }
       }]
     });
-    console.log('Fetched host taskboards:', hostTaskboards);
+   // console.log('Fetched host taskboards:', hostTaskboards);
 
-    console.log('Fetching guest taskboards for userId:', userId);
+   // console.log('Fetching guest taskboards for userId:', userId);
     const guestTaskboards = await Taskboard.findAll({
       include: [{
         model: UserTaskboard,
@@ -76,11 +74,11 @@ class TaskboardService {
         attributes: ['user_id', 'taskboard_id', 'role']
       }]
     });
-    console.log('Fetched guest taskboards:', guestTaskboards);
+    //console.log('Fetched guest taskboards:', guestTaskboards);
 
     // Combine the results from both queries
     const combinedTaskboards = [...hostTaskboards, ...guestTaskboards];
-    console.log('Combined taskboards:', combinedTaskboards);
+   // console.log('Combined taskboards:', combinedTaskboards);
 
     // Fetch and attach tasks for each taskboard
     for (const taskboard of combinedTaskboards) {

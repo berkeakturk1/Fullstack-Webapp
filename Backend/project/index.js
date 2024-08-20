@@ -25,6 +25,7 @@ function authenticateToken(req, res, next) {
   }
 
   jwt.verify(token, 'secret_key', (err, user) => {
+    console.log('Decoded User:', user);
     if (err) {
       return res.sendStatus(403); // Forbidden
     }
