@@ -1,41 +1,47 @@
-// models/task.js
+// models/Task.js
 module.exports = (sequelize, DataTypes) => {
     const Task = sequelize.define('Task', {
       m_id: {
         type: DataTypes.INTEGER,
         primaryKey: true,
-        autoIncrement: true
+        autoIncrement: true,
       },
       task_title: {
-        type: DataTypes.STRING,
-        allowNull: false
+        type: DataTypes.STRING(100),
       },
       task_content: {
-        type: DataTypes.STRING,
-        allowNull: false
+        type: DataTypes.STRING(500),
       },
       status: {
-        type: DataTypes.STRING,
-        allowNull: false,
-        defaultValue: 'todo'
+        type: DataTypes.STRING(255),
+        defaultValue: 'todo',
       },
       importance: {
-        type: DataTypes.STRING,
-        allowNull: false,
-        defaultValue: 'No Time Constraint'
+        type: DataTypes.STRING(50),
+        defaultValue: 'No Time Constraint',
       },
       taskboard_id: {
         type: DataTypes.INTEGER,
-        allowNull: false,
         references: {
-          model: 'taskboards', // Name of the taskboards table
-          key: 'id'
-        }
-      }
+          model: 'Taskboard',
+          key: 'id',
+        },
+      },
+      due_date: {
+        type: DataTypes.DATEONLY,
+      },
+      due_time: {
+        type: DataTypes.TIME,
+      },
     }, {
       tableName: 'tasks',
-      timestamps: false // Disable automatic timestamps if not needed
+      timestamps: false,
     });
+  
+    Task.associate = (models) => {
+      Task.belongsTo(models.Taskboard, { foreignKey: 'taskboard_id' });
+      Task.belongsToMany(models.User, { through: 'UserTasks', foreignKey: 'task_id' });
+    };
   
     return Task;
   };

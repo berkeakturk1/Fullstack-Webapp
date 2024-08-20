@@ -60,7 +60,7 @@ const WorkspacePage: React.FC = () => {
         const guestTaskboards = await guestTaskboardsResponse.json();
   
         // Fetch host taskboards (workspaces)
-        const hostTaskboardsResponse = await fetch(`http://localhost:3001/api/workspaces?userId=${userId}&userType=${userType}`, {
+        const hostTaskboardsResponse = await fetch(`http://localhost:3001/api/workspaces?userId=${userId}`, {
           headers: {
             'Authorization': `Bearer ${token}`,  // Pass the token in the header
           }
@@ -69,6 +69,8 @@ const WorkspacePage: React.FC = () => {
           throw new Error(`Failed to fetch host taskboards: ${hostTaskboardsResponse.statusText}`);
         }
         const hostTaskboards = await hostTaskboardsResponse.json();
+
+      //  console.log('Host Taskboards:', hostTaskboards);
   
         const combinedData = [];
   
@@ -108,13 +110,14 @@ const WorkspacePage: React.FC = () => {
   
         // Process host taskboards
         for (const taskboard of hostTaskboards) {
-          const tasksResponse = await fetch(`http://localhost:3001/api/tasks?taskboardId=${taskboard.taskboard_id}`, {
+          console.log('Host Taskboard_id:', taskboard.id);
+          const tasksResponse = await fetch(`http://localhost:3001/api/tasks?taskboardId=${taskboard.id}`, {
             headers: {
               'Authorization': `Bearer ${token}`,  // Pass the token in the header
             }
           });
           if (!tasksResponse.ok) {
-            throw new Error(`Failed to fetch tasks for taskboard ${taskboard.taskboard_id}: ${tasksResponse.statusText}`);
+            throw new Error(`Failed to fetch tasks for taskboard ${taskboard.id}: ${tasksResponse.statusText}`);
           }
           const tasks = await tasksResponse.json();
   
@@ -128,12 +131,12 @@ const WorkspacePage: React.FC = () => {
           console.log('Host Taskboard:', taskboard);
   
           combinedData.push({
-            taskboardId: taskboard.taskboard_id,
+            taskboardId: taskboard.id,
             id: taskboard.id,
-            name: taskboard.name,
+            name: taskboard.title,
             description: taskboard.description,
-            start: taskboard.start, // Use the correct field here
-            end: taskboard.start,  // Placeholder, same as start
+            start: taskboard.created_at,
+            end: taskboard.created_at,  // Placeholder, same as start
             completed: completed,
             remaining: remaining,
             rejected: rejected,

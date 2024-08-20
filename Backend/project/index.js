@@ -1,6 +1,81 @@
 const express = require('express');
 const cors = require('cors');
 const bodyParser = require('body-parser');
+const jwt = require('jsonwebtoken');
+const { sequelize } = require('./models');  // Import Sequelize models
+
+const UserController = require('./controllers/UserController');
+const TaskboardController = require('./controllers/TaskboardController');
+const TaskController = require('./controllers/TaskController');
+const UserTaskboardController = require('./controllers/UserTaskboardController');
+
+const app = express();
+const port = 3001;
+
+app.use(cors());
+app.use(bodyParser.json());
+
+// Define authenticateToken middleware
+function authenticateToken(req, res, next) {
+  const authHeader = req.headers['authorization'];
+  const token = authHeader && authHeader.split(' ')[1];
+
+  if (!token) {
+    return res.sendStatus(401); // Unauthorized
+  }
+
+  jwt.verify(token, 'secret_key', (err, user) => {
+    if (err) {
+      return res.sendStatus(403); // Forbidden
+    }
+    req.user = user;
+    next(); // Pass execution to the next middleware or route handler
+  });
+}
+
+// User routes
+app.get('/api/users', UserController.getAllUsers);
+app.post('/register', UserController.registerUser);
+app.post('/login', UserController.loginUser);
+app.post('/api/getUserType', UserController.getUserType);
+
+// Taskboard routes
+/*
+app.post('/api/taskboards', authenticateToken, TaskboardController.createTaskboard);
+//app.get('/api/taskboards', authenticateToken, TaskboardController.getTaskboards);
+app.get('/api/taskboards/:id', authenticateToken, TaskboardController.getTaskboardId);
+app.get('/api/workspaces', authenticateToken, TaskboardController.getTaskboards);
+//app.get('/api/workspaces/:workspaceId/taskboards', authenticateToken, TaskboardController.getTaskboardsByWorkspace);
+*/
+
+app.get('/api/taskboards', TaskboardController.getGuestTaskboards);
+app.get('/api/workspaces', TaskboardController.getHostTaskboards);
+app.post('/api/user_taskboards', UserTaskboardController.addUserToTaskboard);
+
+
+// Task routes
+app.post('/api', TaskController.createTask);
+app.put('/api/:id', TaskController.updateTask);
+app.delete('/api/:id', TaskController.deleteTask);
+app.get('/api/tasks', authenticateToken, TaskController.getTasks);
+app.get('/api/user-tasks', authenticateToken, TaskController.getUserTasks);
+app.put('/api/flag-task/:taskId', authenticateToken, TaskController.flagTask);
+
+app.get('/api/sprint/:taskboardID', TaskController.getTasks);
+
+// Start the server
+sequelize.sync().then(() => {
+  app.listen(port, () => {
+    console.log(`Server is running on http://localhost:${port}`);
+  });
+});
+
+
+/*
+
+const express = require('express');
+const cors = require('cors');
+const bodyParser = require('body-parser');
 const { Client } = require('pg');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
@@ -591,6 +666,6 @@ app.get('/api/sprint/:taskboardID', async (req, res) => {
         res.status(500).json({ error: "Internal server error" });
     }
 });
-
+ */
 
 
