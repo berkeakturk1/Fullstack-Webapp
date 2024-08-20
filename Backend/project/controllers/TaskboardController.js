@@ -1,5 +1,5 @@
 const { Taskboard, UserTaskboard, Workspace, Task, User } = require('../models');
-
+const TaskboardService = require('../services/TaskboardService');
 class TaskboardController {
   // Fetch taskboards where the user is a guest
   async getGuestTaskboards(req, res) {
@@ -26,6 +26,8 @@ class TaskboardController {
     }
   }
 
+  
+
 // Fetch taskboards where the user is a host (via Workspace)
 async getHostTaskboards(req, res) {
   const { userId} = req.query;  // Destructure both userId and userType
@@ -43,8 +45,6 @@ async getHostTaskboards(req, res) {
         where: { user_id: userId } // Filter workspaces by user ID (host)
       }
     });
-
-   // console.log('Fetched HOST taskboards:', taskboards);
     
 
     // Send the taskboards as the response

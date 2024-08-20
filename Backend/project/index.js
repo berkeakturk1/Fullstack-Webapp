@@ -25,7 +25,6 @@ function authenticateToken(req, res, next) {
   }
 
   jwt.verify(token, 'secret_key', (err, user) => {
-    console.log('Decoded User:', user);
     if (err) {
       return res.sendStatus(403); // Forbidden
     }
@@ -52,6 +51,7 @@ app.get('/api/workspaces', authenticateToken, TaskboardController.getTaskboards)
 app.get('/api/taskboards', TaskboardController.getGuestTaskboards);
 app.get('/api/workspaces', TaskboardController.getHostTaskboards);
 app.post('/api/user_taskboards', UserTaskboardController.addUserToTaskboard);
+app.get('/api/workforce', UserTaskboardController.getWorkforce);
 
 
 // Task routes

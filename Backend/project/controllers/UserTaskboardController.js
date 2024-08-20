@@ -18,6 +18,19 @@ class UserTaskboardController {
       res.status(500).json({ error: 'Failed to add user to taskboard' });
     }
   }
+
+  async getWorkforce(req, res) {
+    const { taskboard_id } = req.query;
+
+    try {
+      const workforce = await UserTaskboardService.getWorkforce(taskboard_id);
+      res.json(workforce);
+    } catch (error) {
+      console.error('Error fetching workforce:', error);
+      const statusCode = error.message === 'Taskboard not found' ? 404 : 400;
+      res.status(statusCode).json({ error: error.message });
+    }
+  }
 }
 
 module.exports = new UserTaskboardController();

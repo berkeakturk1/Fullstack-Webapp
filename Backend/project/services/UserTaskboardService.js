@@ -1,6 +1,6 @@
 // services/UserTaskboardService.js
 
-const { UserTaskboard } = require('../models');
+const { UserTaskboard, User } = require('../models');
 
 class UserTaskboardService {
   async addUserToTaskboard(user_id, taskboard_id, role = 'editor') {
@@ -20,6 +20,30 @@ class UserTaskboardService {
       throw new Error('Failed to add user to taskboard');
     }
   }
+
+  async getWorkforce(taskboardId) {
+    if (!taskboardId) {
+        throw new Error('taskboard_id is required');
+    }
+
+    const taskboard = await UserTaskboard.findOne({
+        where: { id: taskboardId },
+        include: {
+            model: User,
+            attributes: ['username'], // Only select the username field
+        }
+    });
+
+    if (!taskboard) {
+        throw new Error('Taskboard not found');
+    }
+
+    return taskboard.Users.map(user => ({
+        username: user.username
+    }));
+}
+
+
 }
 
 module.exports = new UserTaskboardService();

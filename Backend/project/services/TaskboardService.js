@@ -1,4 +1,4 @@
-const { Taskboard, UserTaskboard, Workspace, Task } = require('../models');
+const { Taskboard, UserTaskboard, Workspace, Task, User } = require('../models');
 
 class TaskboardService {
   async createTaskboard(data) {
@@ -26,7 +26,7 @@ class TaskboardService {
     return taskboard;
   }
 
-
+  
 
   
 
@@ -40,7 +40,6 @@ class TaskboardService {
     const tasks = await Task.findAll({
       where: { taskboard_id: taskboardId }
     });
-    console.log('Fetched tasks:', tasks);
     return tasks;
   }
 
