@@ -1,0 +1,178 @@
+// src/App.test.tsx
+/*import React from 'react';
+import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { BrowserRouter as Router } from 'react-router-dom';
+import App from './App';
+import fetchMock from 'jest-fetch-mock';
+import { act } from 'react-dom/test-utils';
+
+fetchMock.enableMocks();
+
+describe('App Component', () => {
+  beforeEach(() => {
+    fetchMock.resetMocks();
+  });
+
+  const mockWorkforce = [
+    { username: 'user1' },
+    { username: 'user2' },
+  ];
+
+  const mockTasks = [
+    {
+      id: 1,
+      title: 'Test Note 1',
+      content: 'This is a test note 1',
+      status: 'todo',
+      importance: 'High time constraint',
+      dueDate: '2024-09-01',
+      dueTime: '12:00',
+      assignedUsers: ['user1'],
+    },
+    {
+      id: 2,
+      title: 'Test Note 2',
+      content: 'This is a test note 2',
+      status: 'inProgress',
+      importance: 'Medium time constraint',
+      dueDate: '2024-09-02',
+      dueTime: '14:00',
+      assignedUsers: ['user2'],
+    },
+  ];
+
+  it('should render the component and display columns', async () => {
+    fetchMock.mockResponseOnce(JSON.stringify(mockWorkforce));
+    fetchMock.mockResponseOnce(JSON.stringify(mockTasks));
+
+    render(
+      <Router>
+        <App />
+      </Router>
+    );
+
+    expect(screen.getByText(/TO DO/i)).toBeInTheDocument();
+    expect(screen.getByText(/In Progress/i)).toBeInTheDocument();
+    expect(screen.getByText(/Code Review/i)).toBeInTheDocument();
+    expect(screen.getByText(/Done/i)).toBeInTheDocument();
+  });
+
+  it('should add a new note', async () => {
+    fetchMock.mockResponseOnce(JSON.stringify(mockWorkforce));
+    fetchMock.mockResponseOnce(JSON.stringify(mockTasks));
+
+    render(
+      <Router>
+        <App />
+      </Router>
+    );
+
+    // Mock response for adding note
+    const newNote = {
+      id: 3,
+      title: 'New Test Note',
+      content: 'This is a new test note',
+      status: 'todo',
+      importance: 'No time Constraint',
+      dueDate: null,
+      dueTime: null,
+      assignedUsers: [],
+    };
+    fetchMock.mockResponseOnce(JSON.stringify(newNote));
+
+    // Trigger the add note form
+    fireEvent.click(screen.getByText('+'));
+
+    fireEvent.change(screen.getByPlaceholderText(/Title/i), { target: { value: 'New Test Note' } });
+    fireEvent.change(screen.getByPlaceholderText(/Content/i), { target: { value: 'This is a new test note' } });
+
+    await act(async () => {
+      fireEvent.click(screen.getByText(/Add Note/i));
+    });
+
+    await waitFor(() => {
+      expect(screen.getByText('New Test Note')).toBeInTheDocument();
+    });
+  });
+
+  it('should update an existing note', async () => {
+    fetchMock.mockResponseOnce(JSON.stringify(mockWorkforce));
+    fetchMock.mockResponseOnce(JSON.stringify(mockTasks));
+
+    render(
+      <Router>
+        <App />
+      </Router>
+    );
+
+    const updatedNote = {
+      ...mockTasks[0],
+      title: 'Updated Test Note',
+    };
+    fetchMock.mockResponseOnce(JSON.stringify(updatedNote));
+
+    // Trigger the edit note form
+    fireEvent.click(screen.getByText('Test Note 1'));
+
+    fireEvent.change(screen.getByPlaceholderText(/Title/i), { target: { value: 'Updated Test Note' } });
+
+    await act(async () => {
+      fireEvent.click(screen.getByText(/Update Note/i));
+    });
+
+    await waitFor(() => {
+      expect(screen.getByText('Updated Test Note')).toBeInTheDocument();
+    });
+  });
+
+  it('should delete a note', async () => {
+    fetchMock.mockResponseOnce(JSON.stringify(mockWorkforce));
+    fetchMock.mockResponseOnce(JSON.stringify(mockTasks));
+
+    render(
+      <Router>
+        <App />
+      </Router>
+    );
+
+    fetchMock.mockResponseOnce('', { status: 204 });
+
+    // Trigger delete
+    fireEvent.click(screen.getAllByText('🗑️')[0]);
+
+    await waitFor(() => {
+      expect(screen.queryByText('Test Note 1')).not.toBeInTheDocument();
+    });
+  });
+
+  it('should handle drag and drop to update status', async () => {
+    fetchMock.mockResponseOnce(JSON.stringify(mockWorkforce));
+    fetchMock.mockResponseOnce(JSON.stringify(mockTasks));
+
+    render(
+      <Router>
+        <App />
+      </Router>
+    );
+
+    const updatedNote = {
+      ...mockTasks[0],
+      status: 'inProgress',
+    };
+    fetchMock.mockResponseOnce(JSON.stringify(updatedNote));
+
+    // Simulate dragging a note
+    const draggable = screen.getByText('Test Note 1');
+    const droppable = screen.getByText('In Progress').parentElement;
+
+    if (droppable) {
+      fireEvent.dragStart(draggable);
+      fireEvent.dragEnter(droppable);
+      fireEvent.drop(droppable);
+    }
+
+    await waitFor(() => {
+      expect(screen.getByText('Test Note 1').parentElement?.parentElement).toHaveTextContent('In Progress');
+    });
+  });
+}); */
