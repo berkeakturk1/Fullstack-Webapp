@@ -35,7 +35,7 @@ Make sure you have the following installed on your machine:
 
     docker-compose up --build
 
-### Running the Application
+## Running the Application
 
     Once the containers are up and running, you can access the application:
 
