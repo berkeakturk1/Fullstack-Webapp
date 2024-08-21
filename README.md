@@ -16,11 +16,7 @@ The application consists of a React frontend and a Node.js backend, with Postgre
   - [Prerequisites](#prerequisites)
   - [Installation](#installation)
   - [Running the Application](#running-the-application)
-  - [Running Tests](#running-tests)
-- [Project Structure](#project-structure)
 - [Technologies Used](#technologies-used)
-- [Contributing](#contributing)
-- [License](#license)
 
 ## Getting Started
 
