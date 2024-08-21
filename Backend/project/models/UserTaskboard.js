@@ -30,8 +30,8 @@ module.exports = (sequelize, DataTypes) => {
   });
 
   UserTaskboard.associate = (models) => {
-    UserTaskboard.belongsTo(models.User, { foreignKey: 'user_id', as: 'User' });
-    UserTaskboard.belongsTo(models.Taskboard, { foreignKey: 'taskboard_id', as: 'Taskboard' });
+    UserTaskboard.belongsTo(models.User, { foreignKey: 'user_id', as: 'user' });
+    UserTaskboard.belongsTo(models.Taskboard, { foreignKey: 'taskboard_id', as: 'taskboard' });
   };
 
   return UserTaskboard;

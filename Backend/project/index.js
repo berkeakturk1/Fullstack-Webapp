@@ -56,7 +56,7 @@ app.get('/api/workforce', UserTaskboardController.getWorkforce);
 
 // Task routes
 app.post('/api', TaskController.createTask);
-app.put('/api/:id', TaskController.updateTask);
+app.put('/api/update/:id', TaskController.updateTask);
 app.delete('/api/:id', TaskController.deleteTask);
 app.get('/api/tasks', authenticateToken, TaskController.getTasks);
 app.get('/api/user-tasks', authenticateToken, TaskController.getUserTasks);

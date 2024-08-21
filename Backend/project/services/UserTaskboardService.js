@@ -1,6 +1,4 @@
-// services/UserTaskboardService.js
-
-const { UserTaskboard, User } = require('../models');
+const { UserTaskboard, sequelize, Sequelize } = require('../models'); // Import Sequelize
 
 class UserTaskboardService {
   async addUserToTaskboard(user_id, taskboard_id, role = 'editor') {
@@ -12,7 +10,7 @@ class UserTaskboardService {
           role,
         },
         {
-          returning: ['user_id', 'taskboard_id', 'role'], // Specify fields to return explicitly
+          returning: ['user_id', 'taskboard_id', 'role'],
         }
       );
       return userTaskboard;
@@ -26,24 +24,24 @@ class UserTaskboardService {
         throw new Error('taskboard_id is required');
     }
 
-    const taskboard = await UserTaskboard.findOne({
-        where: { id: taskboardId },
-        include: {
-            model: User,
-            attributes: ['username'], // Only select the username field
-        }
-    });
+    const taskboard = await sequelize.query(
+      `SELECT DISTINCT u.username FROM user_taskboards ut,users u WHERE ut.taskboard_id = :taskboardId `,
+      {
+          replacements: { taskboardId },
+          type: Sequelize.QueryTypes.SELECT  // Corrected: Use Sequelize.QueryTypes
+      }
+    );
+
 
     if (!taskboard) {
         throw new Error('Taskboard not found');
     }
 
-    return taskboard.Users.map(user => ({
-        username: user.username
+    // Modify according to what you expect to return, this is a placeholder
+    return taskboard.map(user => ({
+        username: user.username,
     }));
-}
-
-
+  }
 }
 
 module.exports = new UserTaskboardService();

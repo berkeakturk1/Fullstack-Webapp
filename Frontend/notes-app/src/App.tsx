@@ -131,7 +131,7 @@ const App = () => {
 
     const handleAddNote = async (event: React.FormEvent) => {
         if (!currentColumn || !taskboardId) return;
-
+    
         const newNote = {
             title: title,
             content: content,
@@ -142,7 +142,7 @@ const App = () => {
             taskboardId: parseInt(taskboardId, 10),
             assignedTo: selectedWorkforce // Pass selected users
         };
-
+    
         try {
             const response = await fetch("http://localhost:3001/api/", {
                 method: "POST",
@@ -151,11 +151,11 @@ const App = () => {
                 },
                 body: JSON.stringify(newNote),
             });
-
+    
             if (!response.ok) {
                 throw new Error("Failed to add note");
             }
-
+    
             const addedNote = await response.json();
             setNotes([addedNote, ...notes]);
             setTitle("");
@@ -169,6 +169,7 @@ const App = () => {
             console.error("Error adding note:", error);
         }
     };
+    
 
 
     const handleNoteClick = (note: Note) => {
@@ -265,7 +266,7 @@ const App = () => {
     setNotes(updatedNotes);
 
     try {
-      const response = await fetch(`http://localhost:3001/api/${movedNote.id}`, {
+      const response = await fetch(`http://localhost:3001/api/update/${movedNote.id}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",

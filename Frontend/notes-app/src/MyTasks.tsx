@@ -179,8 +179,8 @@ const MyTasks: React.FC = () => {
                                         <Tooltip title={task.status === "Code Review" ? "Pending Review" : task.status === "Done" ? "Task Surpassed Review" : "Complete Task"}>
                                                 <span>
                                                     <IconButton
-                                                        onClick={task.status === "In Progress" ? () => handleFlagForReview(task.id) : undefined}
-                                                        disabled={task.status !== "In Progress"} // Only enable if status is "In Progress"
+                                                        onClick={(task.status === "In Progress" || task.status ==="To Do" )? () => handleFlagForReview(task.id) : undefined}
+                                                        disabled={task.status == "Done" || task.status == "Code Review"} // Only enable if status is "In Progress"
                                                         sx={{ color: task.status === "Code Review" ? '#4caf50' : 'inherit' }}
                                                     >
                                                         {task.status === "Done" ? (

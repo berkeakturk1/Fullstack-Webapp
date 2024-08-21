@@ -1,15 +1,36 @@
-// services/TaskService.js
-const { Task, Taskboard, UserTask } = require('../models');
+const { Task, Taskboard, UserTask, User, sequelize } = require('../models'); // Ensure sequelize is imported here
 
 class TaskService {
+  // Create a task and assign users to it
   async createTask(data) {
-    return Task.create(data);
+    const { assignedTo, ...taskData } = data;
+
+    // Create the task
+    const task = await Task.create(taskData);
+
+    // Assign users to the task if there are any
+    if (assignedTo && assignedTo.length > 0) {
+      await this.assignUsersToTask(assignedTo, task.m_id);
+    }
+
+    return task;
   }
 
   async updateTask(id, data) {
+    const { assignedTo, ...taskData } = data;
+
     const task = await Task.findByPk(id);
     if (!task) throw new Error('Task not found');
-    return task.update(data);
+
+    // Update the task details
+    await task.update(taskData);
+
+    // Update the assigned users
+    if (assignedTo && assignedTo.length > 0) {
+      await this.updateUsersForTask(assignedTo, task.m_id);
+    }
+
+    return task;
   }
 
   async deleteTask(id) {
@@ -18,10 +39,87 @@ class TaskService {
     return task.destroy();
   }
 
+  // New function to get user IDs from usernames
+  async getUserIdsFromUsernames(usernames) {
+    const userIds = [];
+    for (const username of usernames) {
+      const result = await User.findOne({
+        where: { username },
+        attributes: ['id'],
+      });
+      if (result) {
+        userIds.push(result.id);
+      }
+    }
+    return userIds;
+  }
+
+  // Function to assign users to a task
+  async assignUsersToTask(usernames, taskId) {
+    try {
+      const userIds = await this.getUserIdsFromUsernames(usernames);
+  
+      if (userIds.length > 0) {
+        const assignmentQueries = userIds.map(userId => {
+          const query = `
+            INSERT INTO user_tasks (user_id, task_id, role, assigned_at)
+            VALUES (:userId, :taskId, :role, :assignedAt)
+          `;
+          
+          return sequelize.query(query, {
+            replacements: {
+              userId,
+              taskId,
+              role: 'assignee', // Assuming this is the role you're assigning
+              assignedAt: new Date(), // Assign the current date/time
+            },
+            type: sequelize.QueryTypes.INSERT, // Specifies that this is an INSERT query
+          });
+        });
+  
+        await Promise.all(assignmentQueries);
+      }
+    } catch (error) {
+      console.error('Error assigning users to task:', error);
+      throw new Error('Failed to assign users to the task');
+    }
+  }
+  
+
   async getTasksByTaskboardId(taskboardId) {
-    return Task.findAll({
-      where: { taskboard_id: taskboardId }
-    });
+    try {
+      const tasks = await Task.findAll({
+        where: { taskboard_id: taskboardId },
+        include: [
+          {
+            model: UserTask,
+            attributes: ['task_id'],
+            include: [
+              {
+                model: User,
+                attributes: ['username'],
+              },
+            ],
+          },
+        ],
+        attributes: ['m_id', 'task_title', 'task_content', 'status', 'importance', 'due_date', 'due_time'],
+        order: [['m_id', 'ASC']],
+      });
+
+      return tasks.map(task => ({
+        m_id: task.m_id,
+        task_title: task.task_title,
+        task_content: task.task_content,
+        status: task.status,
+        importance: task.importance,
+        due_date: task.due_date,
+        due_time: task.due_time,
+        assigned_users: task.UserTasks.map(ut => ut.User.username), // Get usernames of assigned users
+      }));
+    } catch (error) {
+      console.error('Error fetching tasks by taskboardId:', error);
+      throw new Error('Failed to fetch tasks for the taskboard');
+    }
   }
 
   async flagTask(taskId) {

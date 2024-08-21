@@ -1,10 +1,11 @@
-// controllers/TaskController.js
 const TaskService = require('../services/TaskService');
 
 class TaskController {
   async createTask(req, res) {
     try {
       const { title, content, status, importance, dueDate, dueTime, taskboardId, assignedTo } = req.body;
+
+      // Create the task with assigned users
       const task = await TaskService.createTask({
         task_title: title,
         task_content: content,
@@ -12,19 +13,37 @@ class TaskController {
         importance: importance || 'No time Constraint',
         due_date: dueDate || null,
         due_time: dueTime || null,
-        taskboard_id: taskboardId
+        taskboard_id: taskboardId,
+        assignedTo: assignedTo || [] // Pass the assigned users to the service
       });
-
-      if (assignedTo && assignedTo.length > 0) {
-        const userIds = await UserService.getUserIdsFromUsernames(assignedTo);
-        await Promise.all(userIds.map(userId =>
-          TaskService.assignUserToTask(userId, task.m_id)
-        ));
-      }
 
       res.json(task);
     } catch (error) {
+      console.error('Error creating task:', error);
       res.status(500).json({ error: 'Failed to create task' });
+    }
+  }
+
+  async updateTask(req, res) {
+    try {
+      const { id } = req.params;
+      const { title, content, status, importance, dueDate, dueTime, assignedTo } = req.body;
+
+      // Update the task and reassign users
+      const updatedTask = await TaskService.updateTask(id, {
+        task_title: title,
+        task_content: content,
+        status,
+        importance,
+        due_date: dueDate || null,
+        due_time: dueTime || null,
+        assignedTo: assignedTo || [] // Pass the assigned users to the service
+      });
+
+      res.json(updatedTask);
+    } catch (error) {
+      console.error('Error updating task:', error);
+      res.status(500).json({ error: 'Failed to update task' });
     }
   }
 
@@ -39,34 +58,6 @@ class TaskController {
     } catch (error) {
       console.error('Error fetching user tasks:', error);
       res.status(500).json({ error: 'Failed to fetch user tasks' });
-    }
-  }
-
-  async updateTask(req, res) {
-    try {
-      const { id } = req.params;
-      const { title, content, status, importance, dueDate, dueTime, assignedTo } = req.body;
-
-      const updatedTask = await TaskService.updateTask(id, {
-        task_title: title,
-        task_content: content,
-        status,
-        importance,
-        due_date: dueDate || null,
-        due_time: dueTime || null
-      });
-
-      if (assignedTo && assignedTo.length > 0) {
-        await TaskService.clearTaskAssignments(id);
-        const userIds = await UserService.getUserIdsFromUsernames(assignedTo);
-        await Promise.all(userIds.map(userId =>
-          TaskService.assignUserToTask(userId, id)
-        ));
-      }
-
-      res.json(updatedTask);
-    } catch (error) {
-      res.status(500).json({ error: 'Failed to update task' });
     }
   }
 
