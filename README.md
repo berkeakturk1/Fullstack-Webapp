@@ -1,6 +1,14 @@
 # Fullstack Web Application
 
-This project is a fullstack web application that consists of a React frontend and a Node.js backend using PostgreSQL as the database. The application is containerized using Docker and Docker Compose.
+This project is a full-stack web application designed for team and project management. It offers a variety of features to streamline collaboration and task management within teams:
+
+- **Project Creation:** Easily create and manage projects.
+- **Task Management:** Assign tasks to team members and track their progress.
+- **Task Completion & Review:** Team members can complete tasks and submit them for review.
+- **Admin Controls:** Admins can review tasks, request revisions, or confirm their completion.
+
+The application consists of a React frontend and a Node.js backend, with PostgreSQL as the database. It is fully containerized using Docker and Docker Compose, ensuring a consistent and efficient development and deployment environment.
+
 
 ## Table of Contents
 
@@ -37,7 +45,7 @@ Make sure you have the following installed on your machine:
 
 ## Running the Application
 
-    **Once the containers are up and running, you can access the application:**
+    Once the containers are up and running, you can access the application:
 
     -Frontend: Open your browser and navigate to http://localhost:3000
     -Backend: The backend API is available at http://localhost:3001
