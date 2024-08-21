@@ -37,7 +37,7 @@ Make sure you have the following installed on your machine:
 
 ## Running the Application
 
-    Once the containers are up and running, you can access the application:
+    **Once the containers are up and running, you can access the application:**
 
     -Frontend: Open your browser and navigate to http://localhost:3000
     -Backend: The backend API is available at http://localhost:3001
