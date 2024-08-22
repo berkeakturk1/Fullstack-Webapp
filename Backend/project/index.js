@@ -8,6 +8,7 @@ const UserController = require('./controllers/UserController');
 const TaskboardController = require('./controllers/TaskboardController');
 const TaskController = require('./controllers/TaskController');
 const UserTaskboardController = require('./controllers/UserTaskboardController');
+const WorkspaceController = require('./controllers/WorkspaceController');
 
 const app = express();
 const port = 3001;
@@ -52,8 +53,10 @@ app.get('/api/taskboards', TaskboardController.getGuestTaskboards);
 app.get('/api/workspaces', TaskboardController.getHostTaskboards);
 app.post('/api/user_taskboards', UserTaskboardController.addUserToTaskboard);
 app.get('/api/workforce', UserTaskboardController.getWorkforce);
+app.post('/api/taskboards', TaskboardController.createTaskboard);
 
 
+app.get('/api/workspaceId', WorkspaceController.getWorkspaceId);
 // Task routes
 app.post('/api', TaskController.createTask);
 app.put('/api/update/:id', TaskController.updateTask);

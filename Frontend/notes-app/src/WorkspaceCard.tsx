@@ -5,7 +5,7 @@ import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import HourglassEmptyIcon from '@mui/icons-material/HourglassEmpty';
 import CancelIcon from '@mui/icons-material/Cancel';
 import ReplayIcon from '@mui/icons-material/Replay';
-import AddIcon from '@mui/icons-material/Add';
+import MenuBookIcon from '@mui/icons-material/MenuBook'; // Import the book icon
 
 interface WorkspaceCardProps {
   name: string;
@@ -14,7 +14,7 @@ interface WorkspaceCardProps {
   end: string;
   completed: number;
   remaining: number;
-  rejected: number;
+  inReview: number;
   revising: number;
 }
 
@@ -25,7 +25,7 @@ const WorkspaceCard: React.FC<WorkspaceCardProps> = ({
   end,
   completed,
   remaining: warning,
-  rejected: failed,
+  inReview: inReview,
   revising: skipped,
 }) => {
   const [open, setOpen] = useState(false);
@@ -53,6 +53,14 @@ const WorkspaceCard: React.FC<WorkspaceCardProps> = ({
     }
   };
 
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString);
+    const month = (date.getMonth() + 1).toString().padStart(2, '0');
+    const day = date.getDate().toString().padStart(2, '0');
+    const year = date.getFullYear();
+    return `${day}/${month}/${year}`;
+  };
+
   return (
     <>
       <Card sx={{ mb: 2, width: '100%', position: 'relative' }}>
@@ -66,15 +74,12 @@ const WorkspaceCard: React.FC<WorkspaceCardProps> = ({
             <Typography color="text.secondary" ml={1}>Completed</Typography>
           </Box>
           <Typography color="text.secondary" gutterBottom>
-            Start: {start}
-          </Typography>
-          <Typography color="text.secondary" gutterBottom>
-            End: {end}
+            Start: {formatDate(start)}
           </Typography>
           <Box display="flex" justifyContent="space-around" mt={2} flexWrap="wrap" width="100%">
             <Chip icon={<CheckCircleIcon />} label={`Completed ${completed}`} color="success" sx={{ mb: 1 }} />
             <Chip icon={<HourglassEmptyIcon />} label={`Remaining ${warning}`} color="warning" sx={{ mb: 1 }} />
-            <Chip icon={<CancelIcon />} label={`Rejected ${failed}`} color="error" sx={{ mb: 1 }} />
+            <Chip icon={<MenuBookIcon />} label={`In Review ${inReview}`} color="error" sx={{ mb: 1 }} />
             <Chip icon={<ReplayIcon />} label={`Revision ${skipped}`} sx={{ mb: 1 }} />
           </Box>
         </CardContent>

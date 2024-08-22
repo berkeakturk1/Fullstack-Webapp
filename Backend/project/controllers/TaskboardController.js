@@ -27,6 +27,36 @@ class TaskboardController {
   }
 
   
+  async createTaskboard(req, res) {
+    const { title, description, workspace_id } = req.body;
+    console.log('Create Taskboard Endpoint Hit');
+
+    const userId = req.body.userId || req.query.userId; // Assuming the userId might come from the body or query
+
+    // Validate the required fields
+    if (!title || !description || !workspace_id) {
+      return res.status(400).json({ error: 'Title, description, and workspace ID are required' });
+    }
+
+    try {
+     
+      console.log('Workspace ID:', workspace_id);
+
+      // Create a new taskboard in the database
+      const taskboard = await Taskboard.create({
+        title,
+        description,
+        workspace_id
+      });
+
+      // Respond with the created taskboard
+      res.status(201).json(taskboard);
+    } catch (error) {
+      console.error('Error creating taskboard:', error);
+      res.status(500).json({ error: 'Failed to create taskboard' });
+    }
+  }
+  
 
 // Fetch taskboards where the user is a host (via Workspace)
 async getHostTaskboards(req, res) {

@@ -13,7 +13,7 @@ interface Workspace {
   end: string;
   completed: number;
   remaining: number;
-  rejected: number;
+  inReview: number;
   revising: number;
   iscurrent: boolean;
   isGuest: boolean;
@@ -86,11 +86,11 @@ const WorkspacePage: React.FC = () => {
           }
           const tasks = await tasksResponse.json();
   
-          const completed = tasks.filter((task: any) => task.status === 'done').length;
+          const completed = tasks.filter((task: any) => task.status === 'Done').length;
           const remaining = tasks.filter((task: any) => 
-            task.status === 'todo' || task.status === 'in progress' || task.status === 'code-review').length;
-          const rejected = tasks.filter((task: any) => task.status === 'done').length; // Placeholder logic
-          const revising = tasks.filter((task: any) => task.status === 'in progress').length;
+            task.status === 'To Do' || task.status === 'In Progress').length;
+          const inReview = tasks.filter((task: any) => task.status === 'Code Review').length;
+          const revising = tasks.filter((task: any) => task.status === 'In Progress').length;
 
           combinedData.push({
             taskboardId: taskboard.id,
@@ -101,7 +101,7 @@ const WorkspacePage: React.FC = () => {
             end: taskboard.created_at,  // Placeholder, same as start
             completed: completed,
             remaining: remaining,
-            rejected: rejected,
+            inReview: inReview,
             revising: revising,
             iscurrent: false, // Placeholder for now
             isGuest: true,
@@ -123,9 +123,9 @@ const WorkspacePage: React.FC = () => {
   
           const completed = tasks.filter((task: any) => task.status === 'done').length;
           const remaining = tasks.filter((task: any) => 
-            task.status === 'todo' || task.status === 'in progress' || task.status === 'code-review').length;
-          const rejected = tasks.filter((task: any) => task.status === 'done').length; // Placeholder logic
-          const revising = tasks.filter((task: any) => task.status === 'in progress').length;
+            task.status === 'todo' || task.status === 'in progress').length;
+          const inReview = tasks.filter((task: any) => task.status === 'codeReview').length;
+          const revising = tasks.filter((task: any) => task.status === 'inProgress').length;
 
           // Debugging: Log host taskboard data
           console.log('Host Taskboard:', taskboard);
@@ -139,7 +139,7 @@ const WorkspacePage: React.FC = () => {
             end: taskboard.created_at,  // Placeholder, same as start
             completed: completed,
             remaining: remaining,
-            rejected: rejected,
+            inReview: inReview,
             revising: revising,
             iscurrent: false, // Placeholder for now
             isGuest: false,
