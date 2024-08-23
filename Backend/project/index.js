@@ -9,6 +9,9 @@ const TaskboardController = require('./controllers/TaskboardController');
 const TaskController = require('./controllers/TaskController');
 const UserTaskboardController = require('./controllers/UserTaskboardController');
 const WorkspaceController = require('./controllers/WorkspaceController');
+const RetrospectiveController = require('./controllers/RetrospectiveController');
+
+
 
 const app = express();
 const port = 3001;
@@ -48,6 +51,11 @@ app.get('/api/taskboards/:id', authenticateToken, TaskboardController.getTaskboa
 app.get('/api/workspaces', authenticateToken, TaskboardController.getTaskboards);
 //app.get('/api/workspaces/:workspaceId/taskboards', authenticateToken, TaskboardController.getTaskboardsByWorkspace);
 */
+
+// Retrospective routes
+app.get('/api/taskboards/:taskboardId/retrospective', RetrospectiveController.getRetrospectiveItems);
+app.post('/api/taskboards/:taskboardId/retrospective', RetrospectiveController.addRetrospectiveItem);
+app.delete('/api/retrospective/:itemId', RetrospectiveController.deleteRetrospectiveItem);
 
 app.get('/api/taskboards', TaskboardController.getGuestTaskboards);
 app.get('/api/workspaces', TaskboardController.getHostTaskboards);

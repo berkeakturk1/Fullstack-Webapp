@@ -1,6 +1,12 @@
 {
   "dependencies": {
-    "sequelize-cli": "^6.6.2"
+    "@mui/material": "^5.16.7",
+    "@mui/styled-engine-sc": "^6.0.0-alpha.18",
+    "@mui/system": "^5.16.7",
+    "@types/react": "^18.3.4",
+    "mdb-react-ui-kit": "^8.0.0",
+    "sequelize-cli": "^6.6.2",
+    "ws": "^8.18.0"
   },
   "devDependencies": {
     "@testing-library/jest-dom": "^6.4.8",

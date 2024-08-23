@@ -9,6 +9,7 @@ import Teams from "./Teams";
 import MyTasks from "./MyTasks";
 import Loading from './loading'; // Import the Loading component
 import SprintManagement from './SprintManagement';
+import Retrospective from './Retrospective';
 import { Route, Routes, Navigate, useNavigate, useLocation } from "react-router-dom";
 
 const Main = () => {
@@ -77,6 +78,7 @@ const Main = () => {
             <Route path="/taskboard_user" element={<RegularUserApp />} />
             <Route path="/Home" element={isAuthenticated ? <WorkspacePage /> : <Navigate to="/" />} />
             <Route path="/teams" element={<Teams/>} />
+            <Route path="/retrospective" element={<Retrospective/>} />
           </Routes>
         </>
       )}

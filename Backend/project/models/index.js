@@ -15,7 +15,7 @@ db.Taskboard = require('./Taskboard')(sequelize, Sequelize.DataTypes);
 db.Task = require('./task')(sequelize, Sequelize.DataTypes);
 db.UserTaskboard = require('./UserTaskboard')(sequelize, Sequelize.DataTypes);
 db.UserTask = require('./UserTask')(sequelize, Sequelize.DataTypes);
-
+db.RetrospectiveItem = require('./RetrospectiveItem')(sequelize, Sequelize.DataTypes);
 // Associations
 Object.keys(db).forEach(modelName => {
   if (db[modelName].associate) {
