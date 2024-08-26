@@ -33,6 +33,50 @@ class TaskService {
     return task;
   }
 
+  async updateUsersForTask(assignedTo, taskId) {
+    if (!assignedTo || assignedTo.length === 0) {
+        return;
+    }
+
+    try {
+        const userIds = await this.getUserIdsFromUsernames(assignedTo);
+
+        if (userIds.length > 0) {
+            // Delete old user assignments using a raw SQL query
+            await sequelize.query(
+                `DELETE FROM user_tasks WHERE task_id = :taskId`,
+                {
+                    replacements: { taskId },
+                    type: sequelize.QueryTypes.DELETE
+                }
+            );
+
+            // Insert new user assignments using a raw SQL query
+            const assignmentQueries = userIds.map(userId =>
+                sequelize.query(
+                    `INSERT INTO user_tasks (user_id, task_id, role, assigned_at) 
+                    VALUES (:userId, :taskId, :role, :assignedAt)`,
+                    {
+                        replacements: {
+                            userId,
+                            taskId,
+                            role: 'assignee',
+                            assignedAt: new Date(),
+                        },
+                        type: sequelize.QueryTypes.INSERT
+                    }
+                )
+            );
+
+            await Promise.all(assignmentQueries);
+        }
+    } catch (error) {
+        console.error('Error updating users for task:', error);
+        throw new Error('Failed to update users for the task');
+    }
+}
+
+
   async deleteTask(id) {
     const task = await Task.findByPk(id);
     if (!task) throw new Error('Task not found');
@@ -54,7 +98,6 @@ class TaskService {
     return userIds;
   }
 
-  // Function to assign users to a task
   async assignUsersToTask(usernames, taskId) {
     try {
       const userIds = await this.getUserIdsFromUsernames(usernames);
@@ -83,7 +126,7 @@ class TaskService {
       console.error('Error assigning users to task:', error);
       throw new Error('Failed to assign users to the task');
     }
-  }
+  } 
   
 
   async getTasksByTaskboardId(taskboardId) {

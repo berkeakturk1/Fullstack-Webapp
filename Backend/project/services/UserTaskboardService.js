@@ -32,6 +32,9 @@ class UserTaskboardService {
       }
     );
 
+    if (taskboard.length === 0) {  // Check if the result is empty
+      throw new Error('Taskboard not found');
+    }
 
     if (!taskboard) {
         throw new Error('Taskboard not found');

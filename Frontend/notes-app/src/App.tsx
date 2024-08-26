@@ -183,7 +183,6 @@ const App = () => {
   };
 
     const handleUpdateNote = async (event: React.FormEvent) => {
-
         if (!selectedNote) {
             console.error("No note selected for updating.");
             return;
@@ -231,7 +230,7 @@ const App = () => {
 
 
     const handleDeleteNote = async (id: number, event: React.MouseEvent) => {
-    event.stopPropagation();
+        event.stopPropagation();
     try {
       const response = await fetch(`http://localhost:3001/api/${id}`, {
         method: "DELETE",

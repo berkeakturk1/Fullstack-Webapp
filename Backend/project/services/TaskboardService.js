@@ -54,6 +54,7 @@ class TaskboardService {
     return taskboards;
   }
 
+  /*
   // Fetch taskboards for a user where the user is the host, typically associated through Workspace
   async getTaskboardsByUserAndWorkspace(userId) {
     console.log('Fetching host taskboards for userId:', userId);
@@ -86,7 +87,7 @@ class TaskboardService {
     }
 
     return combinedTaskboards;
-  }
-}
+  }  */
+} 
 
 module.exports = new TaskboardService();
