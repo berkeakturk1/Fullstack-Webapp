@@ -64,3 +64,20 @@ Make sure you have the following installed on your machine:
 **Other:**
 - Docker
 - Docker Compose
+
+## Screenshots
+
+Here are some screenshots of the application to illustrate its main features:
+
+### 1. Project Dashboard
+![Project Dashboard](images/app.png)
+
+### 2. Task Management View
+![Task Management](images/addtask.png)
+
+### 3. Workspace View
+![Workspace View](images/workspace.png)
+![Workspace View1](images/edit_w.png)
+
+### 4. User Tasks View
+![User Tasks](images/usertask.png)
